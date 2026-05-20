@@ -61,3 +61,70 @@ body {
 
 .ladder .stage.coming-soon { opacity: 0.55; }
 .ladder .stage.coming-soon .num { background: var(--line); color: var(--muted); }
+
+/* --- レッスン画面（S3） --- */
+.lesson-head { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.link {
+  background: none; border: none; color: var(--accent); cursor: pointer;
+  font-size: 0.9rem; padding: 0;
+}
+.crumb { color: var(--muted); font-size: 0.9rem; }
+.lesson h2 { font-size: 1.4rem; margin: 4px 0 16px; }
+
+.explanation {
+  background: var(--panel); border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 8px; padding: 2px 16px; margin-bottom: 20px;
+}
+code {
+  background: #eef0f3; padding: 1px 5px; border-radius: 4px;
+  font-family: ui-monospace, "Consolas", monospace; font-size: 0.9em;
+}
+
+.exercise {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 12px; padding: 18px; margin-bottom: 16px;
+}
+.ex-num { color: var(--muted); font-size: 0.8rem; }
+.prompt { margin: 2px 0 12px; }
+.prompt p { margin: 0; font-weight: 600; }
+
+.editor-area {
+  width: 100%; font-family: ui-monospace, "Consolas", monospace;
+  font-size: 0.92rem; line-height: 1.55; tab-size: 4;
+  border: 1px solid var(--line); border-radius: 8px; padding: 12px;
+  resize: vertical; background: #fbfcfd; color: var(--ink);
+}
+.editor-area:focus { outline: 2px solid var(--accent-soft); border-color: var(--accent); }
+
+.ex-actions { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+.btn {
+  font-size: 0.9rem; padding: 8px 16px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--accent); background: var(--accent); color: #fff;
+}
+.btn:hover { filter: brightness(1.06); }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.btn.ghost { background: #fff; color: var(--accent); }
+.btn.next { background: var(--ok); border-color: var(--ok); margin-top: 8px; }
+
+.result { margin-top: 6px; font-size: 0.92rem; }
+.result:empty { display: none; }
+.result.running { color: var(--muted); }
+.result.pass { color: var(--ok); }
+.result.fail, .result.blank { color: #b9770e; }
+.result.error { color: #c0392b; }
+.result pre {
+  background: #2b2f38; color: #e6e6e6; padding: 10px 12px; border-radius: 8px;
+  overflow-x: auto; font-size: 0.85rem; white-space: pre-wrap; word-break: break-word;
+}
+.result pre.detail { background: #fff6e5; color: #7a5200; }
+.result .guide {
+  background: var(--accent-soft); color: var(--ink);
+  border-radius: 8px; padding: 8px 12px; margin: 8px 0 0;
+}
+.result .stdout .label { color: var(--muted); font-size: 0.78rem; margin: 8px 0 2px; }
+
+.hint-line {
+  background: #fff6e5; border-left: 3px solid #e0a93b; border-radius: 6px;
+  padding: 6px 12px; margin: 6px 0; font-size: 0.9rem; color: #7a5200;
+}
