@@ -134,4 +134,5 @@ PRD は `研究/python学習ツール/docs/PRD.md`。spec 構造は `研究/prom
 - ✅ git init ＋初回コミット済み（`研究/python学習ツール/`, ブランチ main, f45c53f）
 - ✅ レッスン設計工程: `docs/LESSON_DESIGN.md`（コンテンツ・スキーマ＋段1 numpy 執筆計画）
 - ✅ STEP2 技術スタック: `docs/TECH_STACK.md`（素JS＋Pyodide＋CodeMirror、ビルドなし、月額0円）
-- 次: STEP3 画面 → STEP4 データモデル → STEP5 CLAUDE.md
+- ✅ STEP3 画面設計: `docs/SCREENS.md`（ロード/ホーム/レッスン3層/卒業課題 の4画面）
+- 次: STEP4 データモデル → STEP5 CLAUDE.md
