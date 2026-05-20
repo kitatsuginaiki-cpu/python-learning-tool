@@ -130,6 +130,7 @@ PRD は `研究/python学習ツール/docs/PRD.md`。spec 構造は `研究/prom
 6. **オフライン要件**: scipy/pandas は初回 import 時 DL。完全オフライン前提にしない旨を明記。
 
 ### 7-7. 進捗
-- ✅ STEP1 PRD 作成・改訂済み: `研究/python学習ツール/docs/PRD.md`（見直し6点反映）
-- ✅ git init 済み（`研究/python学習ツール/`, ブランチ main）
-- 次: 「レッスン設計」工程 → STEP2 技術スタック → STEP3 画面 → STEP4 データモデル → STEP5 CLAUDE.md
+- ✅ STEP1 PRD 作成・改訂済み: `docs/PRD.md`（見直し6点反映）
+- ✅ git init ＋初回コミット済み（`研究/python学習ツール/`, ブランチ main, f45c53f）
+- ✅ レッスン設計工程: `docs/LESSON_DESIGN.md`（コンテンツ・スキーマ＋段1 numpy 執筆計画）
+- 次: STEP2 技術スタック → STEP3 画面 → STEP4 データモデル → STEP5 CLAUDE.md
