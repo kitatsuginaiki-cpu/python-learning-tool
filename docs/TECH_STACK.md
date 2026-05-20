@@ -35,8 +35,10 @@
   - *サーバ側 Python 実行*: バックエンド・サーバ代が発生。PRD のスコープ外。
   - *Skulpt 等の軽量 Python*: numpy/scipy が無い → 研究用途では不可。
 - **無料枠・課金**: Pyodide 本体・CDN とも無償。課金なし。
-- **Claude Code 相性**: ○ JS から `loadPyodide()` を呼ぶだけ。emcee は段6で
-  `micropip.install("emcee")`。
+- **Claude Code 相性**: ○ JS から `loadPyodide()` を呼ぶだけ。
+- **段ごとの遅延ロード**: パッケージは段で必要になった時に読み込む。MVP（段1 numpy）は
+  Pyodide コア＋numpy のみ → 初回ロードを大幅に軽量化。scipy/pandas/matplotlib は
+  段2以降で `loadPackage`、emcee は段6で `micropip.install("emcee")`。
 - **注意（PRD リスク）**: 初回ロードが重い → プログレス表示必須。`file://` 不可 →
   ローカルは `python -m http.server` 経由。
 

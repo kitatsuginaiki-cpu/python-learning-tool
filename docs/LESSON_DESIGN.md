@@ -36,7 +36,7 @@
 | `id` | 例 `"stage-1-lesson-3-ex-2"` |
 | `prompt` | 問題文（何をすればよいか） |
 | `starterCode` | 穴あきコード。空欄は `____` で表す。**import を含み1セル完結** |
-| `solutionCode` | 模範解答（「答えを見る」用） |
+| `solutionCode` | 模範解答。`____` を埋めた実行可能な完全コード（「答えを見る」用） |
 | `test` | 採点コード（`assert` 群。ユーザーコード実行後、同じ名前空間で実行） |
 | `hints` | 段階的な内容ヒント（弱→強）の配列 |
 | `blankLevel` | `guided` / `partial` / `blank`（プログレッシブ・ブランク用） |
@@ -107,10 +107,15 @@ good = mag[____]     # mask を使って mag を絞り込む
 print(good)
 ```
 
-`solutionCode`:
+`solutionCode`（`____` を埋めた実行可能な完全コード）:
 ```python
+import numpy as np
+mag = np.array([18.2, 18.0, 17.9, 18.1, 18.3])
+err = np.array([0.05, 0.30, 0.08, 0.40, 0.06])
+
 mask = err < 0.1
 good = mag[mask]
+print(good)
 ```
 
 `test`:
