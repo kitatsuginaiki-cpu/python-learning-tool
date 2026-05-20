@@ -1,0 +1,13 @@
+# OS / エディタ
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+.vscode/
+.idea/
+
+# ローカルプレビュー用ツール（npx serve 等を使う場合）
+node_modules/
+
+# Pyodide のローカルキャッシュ（CDN参照なので通常は不要）
+pyodide/
