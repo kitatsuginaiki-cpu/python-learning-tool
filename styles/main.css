@@ -1,0 +1,63 @@
+:root {
+  --bg: #f5f6f8;
+  --panel: #ffffff;
+  --ink: #1c2330;
+  --muted: #6b7280;
+  --accent: #2f6df0;
+  --accent-soft: #e4ecff;
+  --line: #d9dde4;
+  --ok: #1f9d57;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", "Hiragino Sans", sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+#app { max-width: 720px; margin: 0 auto; padding: 32px 20px 64px; }
+
+/* --- 起動・ロード画面（S1） --- */
+.loading { text-align: center; padding-top: 18vh; }
+.loading h1 { font-size: 2.6rem; margin: 0 0 4px; letter-spacing: 0.04em; }
+.loading .lead { color: var(--muted); margin: 0 0 28px; }
+.progress {
+  width: 280px; height: 8px; margin: 0 auto 12px;
+  background: var(--line); border-radius: 99px; overflow: hidden;
+}
+.progress .bar {
+  height: 100%; width: 0; background: var(--accent);
+  transition: width 0.4s ease;
+}
+.loading .status { color: var(--muted); font-size: 0.9rem; }
+.loading .status.error { color: #c0392b; }
+
+/* --- ホーム（ラダー画面 S2） --- */
+.home header { margin-bottom: 24px; }
+.home h1 { font-size: 1.8rem; margin: 0; }
+.home header p { color: var(--muted); margin: 4px 0 0; }
+
+.ladder { list-style: none; margin: 0; padding: 0; }
+.ladder .stage {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 10px;
+}
+.ladder .stage .num {
+  flex: none; width: 34px; height: 34px; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 700;
+  background: var(--accent-soft); color: var(--accent);
+}
+.ladder .stage .title { flex: 1; font-weight: 600; }
+.ladder .stage .badge { color: var(--muted); font-size: 0.82rem; }
+
+.ladder .stage.active { cursor: pointer; border-color: var(--accent); }
+.ladder .stage.active:hover { background: var(--accent-soft); }
+.ladder .stage.active .badge { color: var(--accent); }
+
+.ladder .stage.coming-soon { opacity: 0.55; }
+.ladder .stage.coming-soon .num { background: var(--line); color: var(--muted); }

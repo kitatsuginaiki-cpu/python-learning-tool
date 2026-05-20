@@ -137,4 +137,6 @@ PRD は `研究/python学習ツール/docs/PRD.md`。spec 構造は `研究/prom
 - ✅ STEP3 画面設計: `docs/SCREENS.md`（ロード/ホーム/レッスン3層/卒業課題 の4画面）
 - ✅ STEP4 データモデル: `docs/DATA_MODEL.md`（コンテンツ型＋localStorage進捗）
 - ✅ STEP5 CLAUDE.md: プロジェクトルートに作成（spec フロー完了）
-- 次: 実装フェーズ — MVP（エンジン＋段1 numpy）。`docs/` 5文書が仕様の正
+- 実装フェーズ MVP（エンジン＋段1 numpy）。`docs/` 5文書が仕様の正
+  - ✅ (1) エンジン骨格: index.html / Pyodide ロード / ホーム（ラダー）画面
+  - 次: (2) レッスン画面＋採点 → (3) 段1コンテンツ L1-1〜5 → (4) 卒業課題
