@@ -143,4 +143,7 @@ PRD は `研究/python学習ツール/docs/PRD.md`。spec 構造は `研究/prom
   - ✅ (3) 段1コンテンツ L1-1〜5（全5レッスン9演習）＋レッスン間ナビ
   - ✅ (4) 卒業課題（.phot.txt D&D → np.loadtxt → median/MAD）
   - ✅ MVP（エンジン＋段1 numpy）完成。実データで全周回検証済み
-  - 次: デプロイ（Cloudflare Pages / GitHub Pages）／段0・段2〜8 のコンテンツ追加
+  - ✅ GitHub Pages 公開（本番でも起動確認済み）
+    - 公開URL: https://kitatsuginaiki-cpu.github.io/python-learning-tool/
+    - リポジトリ: https://github.com/kitatsuginaiki-cpu/python-learning-tool （public, main）
+  - 次: 段0・段2〜8 のコンテンツ追加 ／ 段クリア演出など改善 ／ /simplify で負債整理

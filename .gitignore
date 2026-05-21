@@ -6,6 +6,9 @@ desktop.ini
 .vscode/
 .idea/
 
+# 共有用に置いたスクリーンショット（リポジトリには含めない）
+スクリーンショット*.png
+
 # ローカルプレビュー・検証用ツール（Playwright 等）。アプリ本体は npm 非依存
 node_modules/
 package.json
