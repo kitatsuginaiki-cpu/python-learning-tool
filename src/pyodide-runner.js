@@ -52,6 +52,21 @@ function assertionDetail(message) {
 }
 
 /**
+ * traceback から Pyodide 内部フレーム（_pyodide/_base.py の eval_code/run 等）を
+ * 取り除き、学習者のコード（<exec> フレーム）以降だけを残す。
+ * @param {unknown} message
+ * @returns {string}
+ */
+function trimTraceback(message) {
+  const text = String(message || "");
+  const lines = text.split("\n");
+  if (!lines[0] || !lines[0].startsWith("Traceback")) return text;
+  const execIdx = lines.findIndex((l) => l.includes('File "<exec>"'));
+  if (execIdx === -1) return text; // <exec> が無い想定外の形はそのまま
+  return [lines[0], ...lines.slice(execIdx)].join("\n");
+}
+
+/**
  * 演習を採点する。ユーザーコードを演習ごとに独立した名前空間で実行し、
  * 例外なら test を同じ名前空間で実行して合否を判定する。
  * @param {string} userCode 学習者のコード（starterCode を埋めたもの）
@@ -78,7 +93,7 @@ export async function gradeSubmission(userCode, testCode) {
         status: "error",
         stdout,
         errorType: err.type || "Error",
-        traceback: String(err.message || err),
+        traceback: trimTraceback(err.message || err),
       };
     }
 
@@ -92,7 +107,7 @@ export async function gradeSubmission(userCode, testCode) {
         status: "error",
         stdout,
         errorType: err.type || "Error",
-        traceback: String(err.message || err),
+        traceback: trimTraceback(err.message || err),
       };
     }
 
