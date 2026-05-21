@@ -141,4 +141,6 @@ PRD は `研究/python学習ツール/docs/PRD.md`。spec 構造は `研究/prom
   - ✅ (1) エンジン骨格: index.html / Pyodide ロード / ホーム（ラダー）画面
   - ✅ (2) レッスン画面＋採点エンジン。段1にL1-4を1問投入（解ける状態）
   - ✅ (3) 段1コンテンツ L1-1〜5（全5レッスン9演習）＋レッスン間ナビ
-  - 次: (4) 卒業課題（.phot.txt ドラッグ＆ドロップ）
+  - ✅ (4) 卒業課題（.phot.txt D&D → np.loadtxt → median/MAD）
+  - ✅ MVP（エンジン＋段1 numpy）完成。実データで全周回検証済み
+  - 次: デプロイ（Cloudflare Pages / GitHub Pages）／段0・段2〜8 のコンテンツ追加

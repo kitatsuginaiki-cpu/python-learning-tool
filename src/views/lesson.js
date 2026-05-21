@@ -29,12 +29,16 @@ function outputBlock(stdout) {
  * @param {{ stage: object, lessonIndex: number,
  *           onBackHome: () => void, onGoLesson: (i: number) => void }} ctx
  */
-export function renderLesson(container, { stage, lessonIndex, onBackHome, onGoLesson }) {
+export function renderLesson(
+  container,
+  { stage, lessonIndex, onBackHome, onGoLesson, onCapstone }
+) {
   const progress = loadProgress();
   const lesson = stage.lessons[lessonIndex];
   const lessonCount = stage.lessons.length;
   const hasPrev = lessonIndex > 0;
   const hasNext = lessonIndex < lessonCount - 1;
+  const hasCapstone = !!stage.capstone;
   let exIndex = 0;
 
   container.innerHTML = `
@@ -76,6 +80,7 @@ export function renderLesson(container, { stage, lessonIndex, onBackHome, onGoLe
         index: exIndex,
         total: lesson.exercises.length,
         hasNextLesson: hasNext,
+        hasCapstone,
         onPass: () => markCleared(progress, ex.id),
         onAdvance: () => {
           if (exIndex < lesson.exercises.length - 1) {
@@ -84,6 +89,8 @@ export function renderLesson(container, { stage, lessonIndex, onBackHome, onGoLe
             slot.scrollIntoView({ behavior: "smooth", block: "start" });
           } else if (hasNext) {
             onGoLesson(lessonIndex + 1);
+          } else if (hasCapstone && onCapstone) {
+            onCapstone();
           } else {
             onBackHome();
           }
@@ -95,12 +102,16 @@ export function renderLesson(container, { stage, lessonIndex, onBackHome, onGoLe
 }
 
 /**
- * 1つの演習カードを作る。
+ * 1つの演習カードを作る。卒業課題（capstone.js）からも再利用される。
  * @param {object} ex 演習
  * @param {{ index: number, total: number, hasNextLesson: boolean,
- *           onPass: () => void, onAdvance: () => void }} ctx
+ *           hasCapstone: boolean, onPass: () => void,
+ *           onAdvance: () => void }} ctx
  */
-function renderExercise(ex, { index, total, hasNextLesson, onPass, onAdvance }) {
+export function renderExercise(
+  ex,
+  { index, total, hasNextLesson, hasCapstone, onPass, onAdvance }
+) {
   const card = document.createElement("div");
   card.className = "exercise";
   card.innerHTML = `
@@ -163,6 +174,7 @@ function renderExercise(ex, { index, total, hasNextLesson, onPass, onAdvance }) 
   function advanceLabel() {
     if (index + 1 < total) return "次の演習へ →";
     if (hasNextLesson) return "次のレッスンへ →";
+    if (hasCapstone) return "卒業課題へ →";
     return "ホームへ戻る →";
   }
 

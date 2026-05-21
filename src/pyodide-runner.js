@@ -117,3 +117,14 @@ export async function gradeSubmission(userCode, testCode) {
     ns.destroy();
   }
 }
+
+/**
+ * ドロップされたファイルを Pyodide の仮想ファイルシステムに書き込む。
+ * 卒業課題が `np.loadtxt(path)` で読めるようにするため。
+ * @param {string} path 仮想FS上のパス（例 "/data.phot.txt"）
+ * @param {string} content ファイル内容（テキスト）
+ */
+export async function writeDataFile(path, content) {
+  const pyodide = await getPyodide();
+  pyodide.FS.writeFile(path, content);
+}

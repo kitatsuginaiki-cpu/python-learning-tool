@@ -4,6 +4,7 @@ import { getPyodide } from "./pyodide-runner.js";
 import { renderLoading } from "./views/loading.js";
 import { renderHome } from "./views/home.js";
 import { renderLesson } from "./views/lesson.js";
+import { renderCapstone } from "./views/capstone.js";
 import { stages } from "../content/index.js";
 
 const app = document.getElementById("app");
@@ -29,7 +30,13 @@ function showLesson(stage, lessonIndex) {
     lessonIndex,
     onBackHome: showHome,
     onGoLesson: (i) => showLesson(stage, i),
+    onCapstone: stage.capstone ? () => showCapstone(stage) : null,
   });
+}
+
+/** 段の卒業課題画面を表示する。 */
+function showCapstone(stage) {
+  renderCapstone(app, { stage, onBackHome: showHome });
 }
 
 /** 起動: ロード画面 → Pyodide ロード → ホーム。 */

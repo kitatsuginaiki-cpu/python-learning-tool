@@ -130,3 +130,14 @@ code {
 }
 
 .lesson-nav { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; }
+
+/* --- 卒業課題画面（S4）のドロップゾーン --- */
+.dropzone {
+  border: 2px dashed var(--line); border-radius: 12px;
+  padding: 24px 18px; text-align: center; color: var(--muted);
+  cursor: pointer; margin-bottom: 16px; background: var(--panel);
+}
+.dropzone:hover, .dropzone:focus { border-color: var(--accent); outline: none; }
+.dropzone.over { border-color: var(--accent); background: var(--accent-soft); }
+.dropzone.loaded { border-style: solid; border-color: var(--ok); color: var(--ink); }
+.dropzone .dz-msg { margin: 0; line-height: 1.8; }

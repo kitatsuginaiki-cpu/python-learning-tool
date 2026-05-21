@@ -295,5 +295,66 @@ print("中央値:", med, " MAD:", mad)`,
       ],
     },
   ],
-  capstone: null, // 卒業課題は実装フェーズ(4)で追加
+  capstone: {
+    id: "stage-1-capstone",
+    needsDataFile: true,
+    blankLevel: "guided",
+    prompt:
+      "ドロップした `.phot.txt` を読み込み、誤差が「誤差の中央値」より" +
+      "大きい点を外して、残った点のフラックスの中央値 `med` と " +
+      "MAD `mad` を求めよう。",
+    starterCode: `import numpy as np
+
+# .phot.txt の 1〜3列目（時刻・フラックス・誤差）を読み込む
+# 4列目は名前（文字列）なので usecols で除く
+data = np.loadtxt("/data.phot.txt", usecols=(0, 1, 2))
+hjd  = data[:, 0]
+flux = data[:, ____]      # フラックスは2列目
+err  = data[:, ____]      # 誤差は3列目
+
+# 誤差が「誤差の中央値」より小さい良い点だけ残す
+err_med = np.median(err)
+mask = ____               # err が err_med より小さいか
+good = flux[____]
+
+# 良い点のフラックスの中央値と MAD
+med = np.median(good)
+mad = np.median(np.abs(good - ____))
+
+print("全測定点:", flux.shape[0], "／ 良い点:", good.shape[0])
+print("中央値:", med)
+print("MAD   :", mad)`,
+    solutionCode: `import numpy as np
+
+data = np.loadtxt("/data.phot.txt", usecols=(0, 1, 2))
+hjd  = data[:, 0]
+flux = data[:, 1]
+err  = data[:, 2]
+
+err_med = np.median(err)
+mask = err < err_med
+good = flux[mask]
+
+med = np.median(good)
+mad = np.median(np.abs(good - med))
+
+print("全測定点:", flux.shape[0], "／ 良い点:", good.shape[0])
+print("中央値:", med)
+print("MAD   :", mad)`,
+    test: `import numpy as np
+_d = np.loadtxt("/data.phot.txt", usecols=(0, 1, 2))
+_flux = _d[:, 1]
+_err = _d[:, 2]
+_good = _flux[_err < np.median(_err)]
+assert flux.shape == _flux.shape, "flux の読み込みが違います"
+assert err.shape == _err.shape, "err の読み込みが違います"
+assert good.shape[0] == _good.shape[0], f"良い点の数が違います: {good.shape[0]}"
+assert np.isclose(med, np.median(_good)), f"中央値が違います: {med}"
+assert np.isclose(mad, np.median(np.abs(_good - np.median(_good)))), f"MAD が違います: {mad}"`,
+    hints: [
+      "`data[:, 1]` で2列目（フラックス）、`data[:, 2]` で3列目（誤差）が取り出せます。",
+      "ブール索引: `mask = err < err_med` を作り、`flux[mask]` で良い点だけ残します。",
+      "空欄は順に `1` ／ `2` ／ `err < err_med` ／ `mask` ／ `med` です。",
+    ],
+  },
 };
