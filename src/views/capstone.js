@@ -5,7 +5,7 @@
 
 import { renderExercise } from "./lesson.js";
 import { renderMarkdown } from "../markdown.js";
-import { writeDataFile } from "../pyodide-runner.js";
+import { writeDataFile, ensurePackages } from "../pyodide-runner.js";
 import { loadProgress, markCleared } from "../progress.js";
 
 /** ドロップしたファイルを置く Pyodide 仮想FS上のパス。starterCode/test と合わせる。 */
@@ -40,6 +40,9 @@ export function renderCapstone(container, { stage, onBackHome }) {
   const ex = stage.capstone;
   const needsFile = !!ex.needsDataFile;
 
+  // この段で必要な追加パッケージ（pandas 等）を先読みしておく。
+  ensurePackages(stage.packages || []);
+
   const dropzoneHtml = needsFile
     ? `<div class="dropzone" tabindex="0">
          <p class="dz-msg">ここに <code>.phot.txt</code> をドラッグ＆ドロップ<br>
@@ -69,6 +72,7 @@ export function renderCapstone(container, { stage, onBackHome }) {
     total: 1,
     hasNextLesson: false,
     hasCapstone: false,
+    packages: stage.packages || [],
     onPass: () => markCleared(progress, ex.id),
     onAdvance: onBackHome,
   });

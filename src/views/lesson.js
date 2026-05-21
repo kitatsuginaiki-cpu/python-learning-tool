@@ -2,7 +2,7 @@
 // 段内のレッスン間ナビゲーションも持つ。
 
 import { createEditor } from "../editor.js";
-import { gradeSubmission } from "../pyodide-runner.js";
+import { gradeSubmission, ensurePackages } from "../pyodide-runner.js";
 import { renderMarkdown } from "../markdown.js";
 import { loadProgress, markCleared } from "../progress.js";
 import { errorGuide } from "../../content/error-guide.js";
@@ -40,6 +40,9 @@ export function renderLesson(
   const hasNext = lessonIndex < lessonCount - 1;
   const hasCapstone = !!stage.capstone;
   let exIndex = 0;
+
+  // この段で必要な追加パッケージ（pandas 等）を先読みしておく。
+  ensurePackages(stage.packages || []);
 
   container.innerHTML = `
     <div class="lesson">
@@ -81,6 +84,7 @@ export function renderLesson(
         total: lesson.exercises.length,
         hasNextLesson: hasNext,
         hasCapstone,
+        packages: stage.packages || [],
         onPass: () => markCleared(progress, ex.id),
         onAdvance: () => {
           if (exIndex < lesson.exercises.length - 1) {
@@ -110,7 +114,7 @@ export function renderLesson(
  */
 export function renderExercise(
   ex,
-  { index, total, hasNextLesson, hasCapstone, onPass, onAdvance }
+  { index, total, hasNextLesson, hasCapstone, packages = [], onPass, onAdvance }
 ) {
   const card = document.createElement("div");
   card.className = "exercise";
@@ -160,7 +164,7 @@ export function renderExercise(
     resultEl.className = "result running";
     resultEl.textContent = "実行中…";
     try {
-      const res = await gradeSubmission(editor.getCode(), ex.test);
+      const res = await gradeSubmission(editor.getCode(), ex.test, packages);
       renderResult(res);
     } catch (e) {
       resultEl.className = "result error";

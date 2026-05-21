@@ -146,7 +146,10 @@ PRD は `研究/python学習ツール/docs/PRD.md`。spec 構造は `研究/prom
   - ✅ GitHub Pages 公開（本番でも起動確認済み）
     - 公開URL: https://kitatsuginaiki-cpu.github.io/python-learning-tool/
     - リポジトリ: https://github.com/kitatsuginaiki-cpu/python-learning-tool （public, main）
-  - ✅ 段0「Python の基礎」追加（5レッスン10演習＋卒業課題、全11 pass）
+  - ✅ 段0「Python の基礎」（5レッスン＋卒業課題、全11 pass）
     capstone.js を needsDataFile で分岐（ファイル不要の卒業課題に対応）
-  - 次: 段2〜6 を順次追加（次は段2 pandas）
+  - ✅ 段2「pandas」（5レッスン＋卒業課題、全11 pass）
+    段別パッケージ遅延ロード機構を追加（stage.packages → ensurePackages）
+  - 次: 段3 matplotlib（図の表示・プロット採点のエンジン拡張が要る）
+    → 段4 curve_fit → 段5 フィット評価 → 段6 MCMC
     段7・8 は概念中心で実行型エンジンと相性が悪い → 到達時に形式を要相談

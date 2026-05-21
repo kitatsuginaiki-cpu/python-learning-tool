@@ -71,15 +71,17 @@ function trimTraceback(message) {
  * 例外なら test を同じ名前空間で実行して合否を判定する。
  * @param {string} userCode 学習者のコード（starterCode を埋めたもの）
  * @param {string} testCode assert による採点コード
+ * @param {string[]} [packages] この段で必要な追加パッケージ（pandas 等）
  * @returns {Promise<{status:string, stdout?:string, detail?:string,
  *                     errorType?:string, traceback?:string}>}
  */
-export async function gradeSubmission(userCode, testCode) {
+export async function gradeSubmission(userCode, testCode, packages = []) {
   // 空欄が残っていれば SyntaxError でなく親切に知らせる（CLAUDE.md）。
   if (userCode.includes("____")) {
     return { status: "blank" };
   }
 
+  if (packages.length > 0) await ensurePackages(packages);
   const pyodide = await getPyodide();
   const ns = pyodide.toPy({}); // 演習ごとの新しい名前空間
   let stdout = "";
