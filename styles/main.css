@@ -128,3 +128,5 @@ code {
   background: #fff6e5; border-left: 3px solid #e0a93b; border-radius: 6px;
   padding: 6px 12px; margin: 6px 0; font-size: 0.9rem; color: #7a5200;
 }
+
+.lesson-nav { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; }

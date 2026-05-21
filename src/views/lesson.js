@@ -1,4 +1,5 @@
 // S3 レッスン画面（3層UI）。解説 → 穴埋め演習（実行・採点・ヒント）。
+// 段内のレッスン間ナビゲーションも持つ。
 
 import { createEditor } from "../editor.js";
 import { gradeSubmission } from "../pyodide-runner.js";
@@ -25,24 +26,46 @@ function outputBlock(stdout) {
 /**
  * レッスン画面を描画する。
  * @param {HTMLElement} container
- * @param {{ stage: object, lesson: object, onBackHome: () => void }} ctx
+ * @param {{ stage: object, lessonIndex: number,
+ *           onBackHome: () => void, onGoLesson: (i: number) => void }} ctx
  */
-export function renderLesson(container, { stage, lesson, onBackHome }) {
+export function renderLesson(container, { stage, lessonIndex, onBackHome, onGoLesson }) {
   const progress = loadProgress();
+  const lesson = stage.lessons[lessonIndex];
+  const lessonCount = stage.lessons.length;
+  const hasPrev = lessonIndex > 0;
+  const hasNext = lessonIndex < lessonCount - 1;
   let exIndex = 0;
 
   container.innerHTML = `
     <div class="lesson">
       <div class="lesson-head">
         <button class="link back">← ホーム</button>
-        <span class="crumb">${escapeText(stage.title)}</span>
+        <span class="crumb">${escapeText(stage.title)} ・ レッスン ${
+    lessonIndex + 1
+  } / ${lessonCount}</span>
       </div>
       <h2>${escapeText(lesson.title)}</h2>
       <div class="explanation">${renderMarkdown(lesson.explanation)}</div>
       <div class="exercise-slot"></div>
+      <div class="lesson-nav">
+        <button class="btn ghost prev"${hasPrev ? "" : " disabled"}>← 前のレッスン</button>
+        <button class="btn ghost nextlesson"${hasNext ? "" : " disabled"}>次のレッスン →</button>
+      </div>
     </div>`;
 
   container.querySelector(".back").addEventListener("click", onBackHome);
+  if (hasPrev) {
+    container
+      .querySelector(".prev")
+      .addEventListener("click", () => onGoLesson(lessonIndex - 1));
+  }
+  if (hasNext) {
+    container
+      .querySelector(".nextlesson")
+      .addEventListener("click", () => onGoLesson(lessonIndex + 1));
+  }
+
   const slot = container.querySelector(".exercise-slot");
 
   function showExercise() {
@@ -52,14 +75,16 @@ export function renderLesson(container, { stage, lesson, onBackHome }) {
       renderExercise(ex, {
         index: exIndex,
         total: lesson.exercises.length,
+        hasNextLesson: hasNext,
         onPass: () => markCleared(progress, ex.id),
-        onNext: () => {
+        onAdvance: () => {
           if (exIndex < lesson.exercises.length - 1) {
             exIndex += 1;
             showExercise();
             slot.scrollIntoView({ behavior: "smooth", block: "start" });
+          } else if (hasNext) {
+            onGoLesson(lessonIndex + 1);
           } else {
-            // 段1は1レッスンのみ。次レッスン遷移は実装(3)で対応。
             onBackHome();
           }
         },
@@ -72,9 +97,10 @@ export function renderLesson(container, { stage, lesson, onBackHome }) {
 /**
  * 1つの演習カードを作る。
  * @param {object} ex 演習
- * @param {{ index: number, total: number, onPass: () => void, onNext: () => void }} ctx
+ * @param {{ index: number, total: number, hasNextLesson: boolean,
+ *           onPass: () => void, onAdvance: () => void }} ctx
  */
-function renderExercise(ex, { index, total, onPass, onNext }) {
+function renderExercise(ex, { index, total, hasNextLesson, onPass, onAdvance }) {
   const card = document.createElement("div");
   card.className = "exercise";
   card.innerHTML = `
@@ -133,6 +159,13 @@ function renderExercise(ex, { index, total, onPass, onNext }) {
     }
   });
 
+  /** 「次へ」ボタンのラベルを状況に応じて決める。 */
+  function advanceLabel() {
+    if (index + 1 < total) return "次の演習へ →";
+    if (hasNextLesson) return "次のレッスンへ →";
+    return "ホームへ戻る →";
+  }
+
   /** 採点結果を描画する。 */
   function renderResult(res) {
     resultEl.className = "result " + res.status;
@@ -143,12 +176,13 @@ function renderExercise(ex, { index, total, onPass, onNext }) {
         passed = true;
         onPass();
       }
+      // 正解したら、先の失敗で出ていたヒントは役目を終えるので消す。
+      hintsEl.innerHTML = "";
       if (!nextSlot.querySelector("button")) {
         const b = document.createElement("button");
         b.className = "btn next";
-        b.textContent =
-          index + 1 < total ? "次の演習へ →" : "レッスンを終える →";
-        b.addEventListener("click", onNext);
+        b.textContent = advanceLabel();
+        b.addEventListener("click", onAdvance);
         nextSlot.appendChild(b);
       }
       return;

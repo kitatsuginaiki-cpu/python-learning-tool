@@ -19,7 +19,17 @@ function onSelectStage(stage) {
     alert(`「${stage.title}」のレッスンは準備中です。`);
     return;
   }
-  renderLesson(app, { stage, lesson: stage.lessons[0], onBackHome: showHome });
+  showLesson(stage, 0);
+}
+
+/** 段内の指定レッスンを表示する。 */
+function showLesson(stage, lessonIndex) {
+  renderLesson(app, {
+    stage,
+    lessonIndex,
+    onBackHome: showHome,
+    onGoLesson: (i) => showLesson(stage, i),
+  });
 }
 
 /** 起動: ロード画面 → Pyodide ロード → ホーム。 */
