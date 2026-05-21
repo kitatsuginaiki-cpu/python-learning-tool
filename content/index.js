@@ -2,6 +2,7 @@
 // MVP では段1のみ実装済み。他段はホームに「準備中」で並べるための
 // プレースホルダ（status: "coming-soon"）。
 
+import { stage0 } from "./stage-0.js";
 import { stage1 } from "./stage-1.js";
 
 /** ホームに「準備中」で並べる段のプレースホルダを作る。 */
@@ -19,7 +20,7 @@ function placeholder(number, title) {
 
 /** @type {object[]} 段0〜段8。学習順に並べる。 */
 export const stages = [
-  placeholder(0, "Python の基礎 — 変数・list・関数"),
+  stage0,
   stage1,
   placeholder(2, "pandas — 表データを読み込む"),
   placeholder(3, "matplotlib — グラフと残差を描く"),

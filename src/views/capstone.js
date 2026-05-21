@@ -1,6 +1,7 @@
-// S4 卒業課題画面。実データ（.phot.txt）をドロップして段の総仕上げを行う。
-// 演習カード自体は lesson.js の renderExercise を再利用し、この画面は
-// ファイルのドラッグ＆ドロップと Pyodide 仮想FSへの書き込みを担う。
+// S4 卒業課題画面。段の総仕上げ課題を行う。
+// 演習カード自体は lesson.js の renderExercise を再利用する。
+// 課題が実データを使う場合（ex.needsDataFile）はファイルのドラッグ＆ドロップを
+// 用意し、Pyodide 仮想FSへ書き込む。使わない場合はそのまま解く。
 
 import { renderExercise } from "./lesson.js";
 import { renderMarkdown } from "../markdown.js";
@@ -10,13 +11,16 @@ import { loadProgress, markCleared } from "../progress.js";
 /** ドロップしたファイルを置く Pyodide 仮想FS上のパス。starterCode/test と合わせる。 */
 const DATA_PATH = "/data.phot.txt";
 
-const INTRO =
+const INTRO_FILE =
   "段の総仕上げです。あなた自身の測光ファイル（`.phot.txt`）を読み込み、" +
-  "この段で学んだ numpy ―― 配列・スライス・演算・ブール索引・統計 ―― を" +
-  "使って、悪い測定点を外した中央値と MAD を求めます。\n\n" +
+  "この段で学んだことを使って課題に挑戦します。\n\n" +
   "下の枠に `.phot.txt` をドロップ（またはクリックして選択）してください。" +
   "**4列**（時刻・フラックス・誤差・名前）のテキスト形式を想定しています。" +
   "`#` で始まる行はコメントとして読み飛ばされます。";
+
+const INTRO_PLAIN =
+  "段の総仕上げです。この段のレッスンで学んだことを全部使って、" +
+  "仕上げの課題に挑戦しましょう。";
 
 /** HTML 特殊文字をエスケープする。 */
 function escapeText(s) {
@@ -34,6 +38,15 @@ function escapeText(s) {
 export function renderCapstone(container, { stage, onBackHome }) {
   const progress = loadProgress();
   const ex = stage.capstone;
+  const needsFile = !!ex.needsDataFile;
+
+  const dropzoneHtml = needsFile
+    ? `<div class="dropzone" tabindex="0">
+         <p class="dz-msg">ここに <code>.phot.txt</code> をドラッグ＆ドロップ<br>
+           （またはクリックして選択）</p>
+         <input type="file" class="dz-input" accept=".txt,.phot,.dat" hidden />
+       </div>`
+    : "";
 
   container.innerHTML = `
     <div class="lesson">
@@ -41,19 +54,16 @@ export function renderCapstone(container, { stage, onBackHome }) {
         <button class="link back">← ホーム</button>
         <span class="crumb">${escapeText(stage.title)} ・ 卒業課題</span>
       </div>
-      <h2>卒業課題 — 実データで仕上げる</h2>
-      <div class="explanation">${renderMarkdown(INTRO)}</div>
-      <div class="dropzone" tabindex="0">
-        <p class="dz-msg">ここに <code>.phot.txt</code> をドラッグ＆ドロップ<br>
-          （またはクリックして選択）</p>
-        <input type="file" class="dz-input" accept=".txt,.phot,.dat" hidden />
-      </div>
+      <h2>卒業課題 — ${needsFile ? "実データで仕上げる" : "段のまとめ"}</h2>
+      <div class="explanation">${renderMarkdown(
+        needsFile ? INTRO_FILE : INTRO_PLAIN
+      )}</div>
+      ${dropzoneHtml}
       <div class="exercise-slot"></div>
     </div>`;
 
   container.querySelector(".back").addEventListener("click", onBackHome);
 
-  // 演習カードを作る。ファイル投入まで「実行して採点」は押せない。
   const card = renderExercise(ex, {
     index: 0,
     total: 1,
@@ -63,10 +73,14 @@ export function renderCapstone(container, { stage, onBackHome }) {
     onAdvance: onBackHome,
   });
   const runBtn = card.querySelector(".run");
-  runBtn.disabled = true;
   container.querySelector(".exercise-slot").appendChild(card);
 
-  // ドロップゾーン
+  if (!needsFile) return; // ファイル不要ならここまで
+
+  // --- 以下、実データを使う課題のみ: ドロップゾーンの配線 ---
+  // ファイル投入まで「実行して採点」は押せない。
+  runBtn.disabled = true;
+
   const dz = container.querySelector(".dropzone");
   const input = container.querySelector(".dz-input");
   const msg = container.querySelector(".dz-msg");
