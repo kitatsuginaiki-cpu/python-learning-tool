@@ -65,7 +65,8 @@ python学習ツール/
 
 - `docs/` の5文書（PRD / LESSON_DESIGN / TECH_STACK / SCREENS / DATA_MODEL）が仕様の
   正。実装はこれに従い、食い違いに気づいたら先に文書を直す。
-- **MVP スコープは「エンジン＋段1 numpy」**。段0・段2〜8 には手を出さない。
+- 段0〜段8 の到達ラダーは全段実装済み（`content/stage-0.js`〜`stage-8.js`）。
+  段0〜6 はコード採点型、段7・8 は読み物＋選択式クイズ（`kind: "quiz"`）。
 - 各演習は1セル完結。Pyodide 実行は演習ごとに名前空間を分離する（NameError 構造排除）。
 - `____` が残った `starterCode` をそのまま実行したら、SyntaxError ではなく
   「空欄が残っています」と親切に知らせる。

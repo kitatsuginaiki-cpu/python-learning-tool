@@ -1,6 +1,5 @@
 // 全9段のコンテンツを集約する。ホーム画面はこの配列を並べる。
-// MVP では段1のみ実装済み。他段はホームに「準備中」で並べるための
-// プレースホルダ（status: "coming-soon"）。
+// 段0〜段8 まで全段実装済み（到達ラダー完成）。
 
 import { stage0 } from "./stage-0.js";
 import { stage1 } from "./stage-1.js";
@@ -10,19 +9,7 @@ import { stage4 } from "./stage-4.js";
 import { stage5 } from "./stage-5.js";
 import { stage6 } from "./stage-6.js";
 import { stage7 } from "./stage-7.js";
-
-/** ホームに「準備中」で並べる段のプレースホルダを作る。 */
-function placeholder(number, title) {
-  return {
-    id: `stage-${number}`,
-    number,
-    title,
-    intro: "",
-    status: "coming-soon",
-    lessons: [],
-    capstone: null,
-  };
-}
+import { stage8 } from "./stage-8.js";
 
 /** @type {object[]} 段0〜段8。学習順に並べる。 */
 export const stages = [
@@ -34,5 +21,5 @@ export const stages = [
   stage5,
   stage6,
   stage7,
-  placeholder(8, "実環境を整える力 — venv・pip・版数"),
+  stage8,
 ];
