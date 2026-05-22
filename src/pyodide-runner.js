@@ -32,14 +32,37 @@ async function boot(onProgress) {
 }
 
 /**
+ * Pyodide に同梱されず、PyPI から micropip で入れるパッケージ。
+ * 段6 の emcee / corner はここに入る。
+ */
+const MICROPIP_PACKAGES = new Set(["emcee", "corner"]);
+
+/**
  * 段で必要になったパッケージを遅延ロードする（段2以降で使う）。
+ * 同梱パッケージは loadPackage、PyPI 専用パッケージは micropip で入れる。
  * @param {string[]} packages
  */
 export async function ensurePackages(packages) {
   const pyodide = await getPyodide();
   const missing = packages.filter((p) => !loadedPackages.has(p));
   if (missing.length === 0) return;
-  await pyodide.loadPackage(missing);
+
+  const bundled = missing.filter((p) => !MICROPIP_PACKAGES.has(p));
+  const fromPypi = missing.filter((p) => MICROPIP_PACKAGES.has(p));
+
+  if (bundled.length > 0) await pyodide.loadPackage(bundled);
+
+  if (fromPypi.length > 0) {
+    // micropip 自体は Pyodide 同梱。これで PyPI から emcee 等を入れる。
+    await pyodide.loadPackage("micropip");
+    const micropip = pyodide.pyimport("micropip");
+    try {
+      await micropip.install(fromPypi);
+    } finally {
+      micropip.destroy();
+    }
+  }
+
   missing.forEach((p) => loadedPackages.add(p));
 }
 

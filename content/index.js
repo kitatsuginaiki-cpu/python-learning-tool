@@ -8,6 +8,7 @@ import { stage2 } from "./stage-2.js";
 import { stage3 } from "./stage-3.js";
 import { stage4 } from "./stage-4.js";
 import { stage5 } from "./stage-5.js";
+import { stage6 } from "./stage-6.js";
 
 /** ホームに「準備中」で並べる段のプレースホルダを作る。 */
 function placeholder(number, title) {
@@ -30,7 +31,7 @@ export const stages = [
   stage3,
   stage4,
   stage5,
-  placeholder(6, "MCMC — emcee と corner plot"),
+  stage6,
   placeholder(7, "Jupyter 運用 — セル順とカーネル"),
   placeholder(8, "実環境を整える力 — venv・pip・版数"),
 ];

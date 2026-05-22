@@ -159,5 +159,9 @@ PRD は `研究/python学習ツール/docs/PRD.md`。spec 構造は `研究/prom
   - ✅ 段5「フィット評価」（5レッスン＋卒業課題、全11 pass）
     残差→zスコア→χ²→換算χ²→外れ値検出。卒業課題はガウス型フィットを
     評価し換算χ²≫1（モデル不足）を示す＝評価指標が正しく機能する教材。
-  - 次: 段6 MCMC
+  - ✅ 段6「MCMC」（5レッスン＋卒業課題、全11 pass）
+    エンジン拡張: ensurePackages に micropip 対応を追加（emcee/corner は
+    Pyodide 同梱外→PyPI から install）。対数確率→サンプラー→run_mcmc→
+    バーンイン→percentile 誤差。卒業課題は実データを MCMC し corner plot 表示。
+  - 次: 段7 Jupyter運用・段8 環境構築（概念中心 → 形式を要相談）
     段7・8 は概念中心で実行型エンジンと相性が悪い → 到達時に形式を要相談
