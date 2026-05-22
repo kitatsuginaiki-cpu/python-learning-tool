@@ -153,5 +153,8 @@ PRD は `研究/python学習ツール/docs/PRD.md`。spec 構造は `研究/prom
   - ✅ 段3「matplotlib」（5レッスン＋卒業課題、全11 pass・図表示も11/11）
     エンジン拡張: Agg バックエンドで図を base64 PNG 化し結果欄に表示。
     採点は plt.gca() の lines/collections/containers/ラベルを assert で検査。
-  - 次: 段4 curve_fit → 段5 フィット評価 → 段6 MCMC
+  - ✅ 段4「curve_fit」（5レッスン＋卒業課題、全11 pass）
+    packages: ["scipy"] で scipy 遅延ロード。モデル定義→curve_fit→p0→
+    bounds→共分散誤差。卒業課題は実データの増光にガウス型を当てはめ収束。
+  - 次: 段5 フィット評価 → 段6 MCMC
     段7・8 は概念中心で実行型エンジンと相性が悪い → 到達時に形式を要相談
