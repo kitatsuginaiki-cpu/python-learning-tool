@@ -163,5 +163,8 @@ PRD は `研究/python学習ツール/docs/PRD.md`。spec 構造は `研究/prom
     エンジン拡張: ensurePackages に micropip 対応を追加（emcee/corner は
     Pyodide 同梱外→PyPI から install）。対数確率→サンプラー→run_mcmc→
     バーンイン→percentile 誤差。卒業課題は実データを MCMC し corner plot 表示。
-  - 次: 段7 Jupyter運用・段8 環境構築（概念中心 → 形式を要相談）
+  - ✅ 段7「Jupyter運用」（5レッスン＋まとめ問題、全11 pass）
+    形式決定: 段7・8 は読み物＋選択式クイズ。エンジンに kind:"quiz" 演習を
+    追加（lesson.js に renderQuiz、Pyodide 不使用で選択肢を採点）。
+  - 次: 段8 環境構築（venv/pip・版数・エラー読解。同じ読み物＋クイズ形式）
     段7・8 は概念中心で実行型エンジンと相性が悪い → 到達時に形式を要相談

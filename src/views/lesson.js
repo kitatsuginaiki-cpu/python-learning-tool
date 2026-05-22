@@ -114,15 +114,17 @@ export function renderLesson(
 
 /**
  * 1つの演習カードを作る。卒業課題（capstone.js）からも再利用される。
+ * `ex.kind === "quiz"` の場合は選択式クイズ（段7・8 の読み物形式）を描く。
  * @param {object} ex 演習
  * @param {{ index: number, total: number, hasNextLesson: boolean,
  *           hasCapstone: boolean, onPass: () => void,
  *           onAdvance: () => void }} ctx
  */
-export function renderExercise(
-  ex,
-  { index, total, hasNextLesson, hasCapstone, packages = [], onPass, onAdvance }
-) {
+export function renderExercise(ex, ctx) {
+  if (ex.kind === "quiz") return renderQuiz(ex, ctx);
+
+  const { index, total, hasNextLesson, hasCapstone, packages = [],
+    onPass, onAdvance } = ctx;
   const card = document.createElement("div");
   card.className = "exercise";
   card.innerHTML = `
@@ -250,6 +252,74 @@ export function renderExercise(
   function autoHint() {
     if (hintsShown === 0 && ex.hints.length > 0) revealHint();
   }
+
+  return card;
+}
+
+/**
+ * 選択式クイズのカードを作る（段7・8 の読み物形式で使う）。
+ * Pyodide は使わず、選んだ選択肢の番号を `ex.answer` と突き合わせる。
+ * @param {object} ex `{ kind:"quiz", prompt, choices:[], answer, explain }`
+ * @param {object} ctx renderExercise と同じナビゲーション文脈
+ */
+function renderQuiz(ex, { index, total, hasNextLesson, hasCapstone, onPass, onAdvance }) {
+  const card = document.createElement("div");
+  card.className = "exercise quiz";
+  card.innerHTML = `
+    <div class="ex-num">問題 ${index + 1} / ${total}</div>
+    <div class="prompt">${renderMarkdown(ex.prompt)}</div>
+    <div class="choices"></div>
+    <div class="result"></div>
+    <div class="next-slot"></div>`;
+
+  const choicesEl = card.querySelector(".choices");
+  const resultEl = card.querySelector(".result");
+  const nextSlot = card.querySelector(".next-slot");
+  let passed = false;
+
+  /** 「次へ」ボタンのラベルを状況に応じて決める。 */
+  function advanceLabel() {
+    if (index + 1 < total) return "次の問題へ →";
+    if (hasNextLesson) return "次のレッスンへ →";
+    if (hasCapstone) return "まとめ問題へ →";
+    return "ホームへ戻る →";
+  }
+
+  /** 選択肢が選ばれたときの採点。 */
+  function pick(i, btn) {
+    if (passed) return;
+    if (i === ex.answer) {
+      passed = true;
+      btn.classList.add("correct");
+      choicesEl.querySelectorAll(".choice").forEach((c) => (c.disabled = true));
+      resultEl.className = "result pass";
+      resultEl.innerHTML =
+        "<strong>正解！</strong>" +
+        (ex.explain
+          ? `<div class="explain">${renderMarkdown(ex.explain)}</div>`
+          : "");
+      onPass();
+      const nb = document.createElement("button");
+      nb.className = "btn next";
+      nb.textContent = advanceLabel();
+      nb.addEventListener("click", onAdvance);
+      nextSlot.appendChild(nb);
+    } else {
+      btn.classList.add("wrong");
+      btn.disabled = true;
+      resultEl.className = "result fail";
+      resultEl.innerHTML =
+        "<strong>もう少し！</strong> ほかの選択肢を選んでみましょう。";
+    }
+  }
+
+  ex.choices.forEach((text, i) => {
+    const b = document.createElement("button");
+    b.className = "choice";
+    b.textContent = text; // 学習者向けテキストは textContent で安全に
+    b.addEventListener("click", () => pick(i, b));
+    choicesEl.appendChild(b);
+  });
 
   return card;
 }

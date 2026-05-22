@@ -107,6 +107,22 @@ code {
 .btn.ghost { background: #fff; color: var(--accent); }
 .btn.next { background: var(--ok); border-color: var(--ok); margin-top: 8px; }
 
+/* 段7・8 の選択式クイズ */
+.choices { display: flex; flex-direction: column; gap: 8px; margin: 4px 0 2px; }
+.choice {
+  text-align: left; font-size: 0.92rem; padding: 10px 14px; border-radius: 8px;
+  border: 1px solid var(--line); background: #fbfcfd; color: var(--ink);
+  cursor: pointer;
+}
+.choice:hover:not(:disabled) { border-color: var(--accent); background: var(--accent-soft); }
+.choice:disabled { cursor: default; }
+.choice.correct { border-color: var(--ok); background: #e8f7ee; color: var(--ok); }
+.choice.wrong { border-color: #c0392b; background: #fdecea; color: #c0392b; }
+.result .explain {
+  margin-top: 6px; color: var(--ink); background: var(--accent-soft);
+  border-radius: 8px; padding: 8px 12px;
+}
+
 .result { margin-top: 6px; font-size: 0.92rem; }
 .result:empty { display: none; }
 .result.running { color: var(--muted); }
