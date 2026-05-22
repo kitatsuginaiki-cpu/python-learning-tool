@@ -23,6 +23,13 @@ function outputBlock(stdout) {
   )}</pre></div>`;
 }
 
+/** matplotlib の図（base64 PNG）があれば図ブロックの HTML を返す。 */
+function figureBlock(image) {
+  if (!image) return "";
+  return `<div class="figure"><div class="label">グラフ</div>` +
+    `<img alt="あなたのグラフ" src="data:image/png;base64,${image}"></div>`;
+}
+
 /**
  * レッスン画面を描画する。
  * @param {HTMLElement} container
@@ -187,7 +194,10 @@ export function renderExercise(
     resultEl.className = "result " + res.status;
 
     if (res.status === "pass") {
-      resultEl.innerHTML = "<strong>正解！</strong>" + outputBlock(res.stdout);
+      resultEl.innerHTML =
+        "<strong>正解！</strong>" +
+        figureBlock(res.image) +
+        outputBlock(res.stdout);
       if (!passed) {
         passed = true;
         onPass();
@@ -217,6 +227,7 @@ export function renderExercise(
         (res.detail
           ? `<pre class="detail">${escapeText(res.detail)}</pre>`
           : "") +
+        figureBlock(res.image) +
         outputBlock(res.stdout);
       autoHint();
       return;
@@ -230,6 +241,7 @@ export function renderExercise(
       )}）</strong>` +
       `<pre class="traceback">${escapeText(res.traceback)}</pre>` +
       (guide ? `<p class="guide">📖 ${escapeText(guide)}</p>` : "") +
+      figureBlock(res.image) +
       outputBlock(res.stdout);
     autoHint();
   }

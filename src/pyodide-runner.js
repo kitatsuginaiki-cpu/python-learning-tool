@@ -43,6 +43,28 @@ export async function ensurePackages(packages) {
   missing.forEach((p) => loadedPackages.add(p));
 }
 
+// matplotlib を使う段（段3）の前後処理。
+// SETUP: 非対話バックエンド Agg に固定し、前演習の図を消してから始める。
+// CAPTURE: 学習者コードが描いた現在の図を base64 PNG 化して名前空間に置く。
+const MPL_SETUP = [
+  "import matplotlib",
+  'matplotlib.use("Agg")',
+  "import matplotlib.pyplot as plt",
+  'plt.close("all")',
+].join("\n");
+
+const MPL_CAPTURE = [
+  "def _pyladder_capture():",
+  "    import base64, io",
+  "    import matplotlib.pyplot as _plt",
+  "    if not _plt.get_fignums():",
+  "        return None",
+  "    _buf = io.BytesIO()",
+  '    _plt.gcf().savefig(_buf, format="png", dpi=90, bbox_inches="tight")',
+  '    return base64.b64encode(_buf.getvalue()).decode("ascii")',
+  "_pyladder_img = _pyladder_capture()",
+].join("\n");
+
 /** assert 失敗メッセージ（traceback 末尾の AssertionError 行）を取り出す。 */
 function assertionDetail(message) {
   const lines = String(message || "").trim().split("\n");
@@ -73,7 +95,7 @@ function trimTraceback(message) {
  * @param {string} testCode assert による採点コード
  * @param {string[]} [packages] この段で必要な追加パッケージ（pandas 等）
  * @returns {Promise<{status:string, stdout?:string, detail?:string,
- *                     errorType?:string, traceback?:string}>}
+ *                     errorType?:string, traceback?:string, image?:string}>}
  */
 export async function gradeSubmission(userCode, testCode, packages = []) {
   // 空欄が残っていれば SyntaxError でなく親切に知らせる（CLAUDE.md）。
@@ -84,10 +106,25 @@ export async function gradeSubmission(userCode, testCode, packages = []) {
   if (packages.length > 0) await ensurePackages(packages);
   const pyodide = await getPyodide();
   const ns = pyodide.toPy({}); // 演習ごとの新しい名前空間
+  const usesMpl = packages.includes("matplotlib");
   let stdout = "";
   pyodide.setStdout({ batched: (msg) => (stdout += msg) });
 
+  /** 名前空間に置かれた図（base64 PNG）を取り出す。無ければ undefined。 */
+  const grabImage = () => {
+    if (!usesMpl) return undefined;
+    try {
+      pyodide.runPython(MPL_CAPTURE, { globals: ns });
+      return ns.get("_pyladder_img") || undefined;
+    } catch {
+      return undefined;
+    }
+  };
+
   try {
+    // 段3: 図のバックエンドを固定し、前演習の図をクリアしてから実行する。
+    if (usesMpl) pyodide.runPython(MPL_SETUP, { globals: ns });
+
     try {
       pyodide.runPython(userCode, { globals: ns });
     } catch (err) {
@@ -99,21 +136,24 @@ export async function gradeSubmission(userCode, testCode, packages = []) {
       };
     }
 
+    const image = grabImage();
+
     try {
       pyodide.runPython(testCode, { globals: ns });
     } catch (err) {
       if ((err.type || "") === "AssertionError") {
-        return { status: "fail", stdout, detail: assertionDetail(err.message) };
+        return { status: "fail", stdout, image, detail: assertionDetail(err.message) };
       }
       return {
         status: "error",
         stdout,
+        image,
         errorType: err.type || "Error",
         traceback: trimTraceback(err.message || err),
       };
     }
 
-    return { status: "pass", stdout };
+    return { status: "pass", stdout, image };
   } finally {
     pyodide.setStdout(); // 既定の標準出力に戻す
     ns.destroy();

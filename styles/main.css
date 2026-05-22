@@ -122,7 +122,12 @@ code {
   background: var(--accent-soft); color: var(--ink);
   border-radius: 8px; padding: 8px 12px; margin: 8px 0 0;
 }
-.result .stdout .label { color: var(--muted); font-size: 0.78rem; margin: 8px 0 2px; }
+.result .stdout .label,
+.result .figure .label { color: var(--muted); font-size: 0.78rem; margin: 8px 0 2px; }
+.result .figure img {
+  display: block; max-width: 100%; height: auto;
+  background: #fff; border: 1px solid var(--line); border-radius: 8px;
+}
 
 .hint-line {
   background: #fff6e5; border-left: 3px solid #e0a93b; border-radius: 6px;

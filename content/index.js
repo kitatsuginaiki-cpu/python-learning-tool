@@ -5,6 +5,7 @@
 import { stage0 } from "./stage-0.js";
 import { stage1 } from "./stage-1.js";
 import { stage2 } from "./stage-2.js";
+import { stage3 } from "./stage-3.js";
 
 /** ホームに「準備中」で並べる段のプレースホルダを作る。 */
 function placeholder(number, title) {
@@ -24,7 +25,7 @@ export const stages = [
   stage0,
   stage1,
   stage2,
-  placeholder(3, "matplotlib — グラフと残差を描く"),
+  stage3,
   placeholder(4, "curve_fit — モデルを当てはめる"),
   placeholder(5, "フィット評価 — 残差・χ²・zスコア"),
   placeholder(6, "MCMC — emcee と corner plot"),
